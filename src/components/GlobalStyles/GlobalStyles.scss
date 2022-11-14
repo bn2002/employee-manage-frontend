@@ -1,1 +1,46 @@
-@import 'normalize.css'
+@import "normalize.css";
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: GoogleSans Regular, sans-serif;
+}
+
+@font-face {
+    font-family: GoogleSans;
+    src: url("/assets/fonts/GoogleSans-Thin.otf");
+}
+
+@font-face {
+    font-family: GoogleSans Regular;
+    src: url("/assets/fonts/GoogleSans-Regular.otf");
+}
+
+@font-face {
+    font-family: GoogleSans Black;
+    src: url("/assets/fonts/GoogleSans-Black.otf");
+}
+
+@font-face {
+    font-family: GoogleSans Bold;
+    src: url("/assets/fonts/GoogleSans-Bold.otf");
+}
+
+@font-face {
+    font-family: GoogleSans Medium;
+    src: url("/assets/fonts/GoogleSans-Medium.otf");
+}
+
+@font-face {
+    font-family: GoogleSans Italic;
+    src: url("/assets/fonts/GoogleSans-Italic.otf");
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+li {
+    list-style-type: none;
+}

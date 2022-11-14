@@ -1,4 +1,5 @@
 import classNames from "classnames/bind";
+import Menu from "../Menu/Menu";
 import styles from "./Siderbar.module.scss";
 import logo from "~/assets/cukcuk-logo.png";
 import toggle from "~/assets/img/toggle.png";
@@ -19,6 +20,8 @@ function Siderbar() {
                     <img src={logo} alt="" className={cx("siderbar__img")} />
                 </a>
             </div>
+
+            <Menu></Menu>
         </div>
     );
 }
