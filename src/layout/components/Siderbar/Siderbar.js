@@ -3,12 +3,19 @@ import Menu from "../Menu/Menu";
 import styles from "./Siderbar.module.scss";
 import logo from "~/assets/cukcuk-logo.png";
 import toggle from "~/assets/img/toggle.png";
+import { useData } from "~/hooks";
+import { setShowSiderbar } from "~/store/action";
+
 const cx = classNames.bind(styles);
 function Siderbar() {
+    const [state, dispatch] = useData();
+    const handleClick = () => {
+        dispatch(setShowSiderbar(!state.showSiderbar));
+    };
     return (
         <div className={cx("siderbar")}>
             <div className={cx("siderbar__top")}>
-                <a className={cx("toggle")} href="/#">
+                <a className={cx("toggle")} href="/#" onClick={handleClick}>
                     <img
                         src={toggle}
                         alt=""

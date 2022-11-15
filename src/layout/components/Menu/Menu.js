@@ -2,12 +2,14 @@ import classNames from "classnames/bind";
 import { Link } from "react-router-dom";
 import styles from "./Menu.module.scss";
 import { publicRoutes } from "~/routes";
-import { useState } from "react";
+import { useData } from "~/hooks";
+import { setCurrentPath } from "~/store/action";
 const cx = classNames.bind(styles);
 function Menu() {
-    const [currentPath, setCurrentPath] = useState("");
+    const [state, dispatch] = useData();
+    const { currentPath } = state;
     const handleClick = (path) => {
-        setCurrentPath(path);
+        dispatch(setCurrentPath(path));
     };
     return (
         <ul className={cx("menu")}>

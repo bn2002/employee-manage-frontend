@@ -1,11 +1,17 @@
-const initState = {
-    currentPath: "/",
+const { SET_CURRENT_PATH, SET_SHOW_SIDERBAR } = require("./constants");
+
+const setCurrentPath = (payload) => {
+    return {
+        type: SET_CURRENT_PATH,
+        payload,
+    };
 };
 
-function reducer(state, action) {
-    switch (action.type) {
-    }
-}
+const setShowSiderbar = (payload) => {
+    return {
+        type: SET_SHOW_SIDERBAR,
+        payload,
+    };
+};
 
-export default reducer;
-export { initState };
+export { setCurrentPath, setShowSiderbar };
