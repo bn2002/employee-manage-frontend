@@ -1,0 +1,25 @@
+.input {
+    display: flex;
+    padding: 10px 0;
+    align-items: center;
+    border: 1px solid #e9ebee;
+    width: auto;
+    padding-left: 16px;
+    border-radius: 4px;
+    height: 40px;
+    overflow: hidden;
+    &__icon {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+
+    &__control {
+        border: none;
+        outline: none;
+        width: 80%;
+        ::placeholder {
+            color: #bbb;
+            font-size: 12px;
+        }
+    }
+}
