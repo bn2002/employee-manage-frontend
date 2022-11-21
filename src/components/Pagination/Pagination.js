@@ -4,20 +4,27 @@ import firstPageSvg from "~/assets/icon/btn-firstpage.svg";
 import prevPageSvg from "~/assets/icon/btn-prev-page.svg";
 import nextPageSvg from "~/assets/icon/btn-next-page.svg";
 import lastPageSvg from "~/assets/icon/btn-lastpage.svg";
+import { useEffect } from "react";
+import { useData } from "~/hooks";
+import { setCurrentPage, setPerPage } from "~/store/action";
 const cx = classNames.bind(styles);
 
 function Pagination({ tables }) {
+    const [, dispatch] = useData();
     const {
         canPreviousPage,
         canNextPage,
         pageOptions,
         pageCount,
         gotoPage,
-        nextPage,
-        previousPage,
         setPageSize,
         state: { pageIndex, pageSize },
     } = tables;
+
+    useEffect(() => {
+        dispatch(setPerPage(pageSize));
+        dispatch(setCurrentPage(pageIndex));
+    }, [pageIndex, pageSize]);
 
     return (
         <div className={cx("pagination")}>

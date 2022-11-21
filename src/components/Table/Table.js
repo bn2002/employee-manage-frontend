@@ -26,12 +26,14 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
     );
 });
 
-function Table({ columns, data }) {
+function Table({ columns, data, currentPage, perPage, totalPages }) {
     const tables = useTable(
         {
             columns,
             data,
-            initialState: { pageIndex: 0 },
+            initialState: { pageIndex: currentPage, pageSize: perPage },
+            manualPagination: true,
+            pageCount: totalPages,
         },
         usePagination,
         useRowSelect,
