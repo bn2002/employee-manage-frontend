@@ -26,6 +26,7 @@ import {
     setFilterInput,
     setFilterPosition,
 } from "~/store/action";
+import { toast } from "react-toastify";
 const cx = classNames.bind(styles);
 const employeeHeaderTable = getHeaderTable();
 
@@ -36,28 +37,29 @@ function Home() {
     const [positions, setPositions] = useState([]);
     const [state, dispatch] = useData();
     const [employeeDetail, setEmployeeDetail] = useState({});
-    const [editing, setEditing] = useState(false);
+    const [type, setType] = useState("add");
     const {
         filterPosition,
         filterDepartment,
         filterInput,
         perPage,
         currentPage,
+        selectedRow,
     } = state;
     const handleClickOpenModal = () => {
-        setEditing(false);
+        setType("add");
         setOpenAddModal(true);
     };
 
     const handleClickCloseModal = () => {
-        setEditing(false);
+        setType("add");
         setOpenAddModal(false);
     };
 
     const handleEditEmployee = (employeeId) => {
         getDetailEmployee(employeeId)
             .then((result) => {
-                setEditing(true);
+                setType("edit");
                 setEmployeeDetail(result.data);
                 setOpenAddModal(true);
             })
@@ -105,6 +107,24 @@ function Home() {
         dispatch(setFilterInput(event.target.value));
     };
 
+    const handleCloneEmployeeBtn = () => {
+        if (selectedRow.length < 1) {
+            toast.error("Vui lòng chọn nhân viên cần nhân bản");
+            return;
+        }
+        if (selectedRow.length != 1) {
+            toast.error("Mỗi lần chỉ được nhân bản 1 nhân viên");
+        }
+        let employeeId = selectedRow[0].id;
+        getDetailEmployee(employeeId)
+            .then((result) => {
+                setType("clone");
+                setEmployeeDetail(result.data);
+                setOpenAddModal(true);
+            })
+            .catch(console.log);
+    };
+
     return (
         <>
             <div className={cx("row", "space-between", "align-center")}>
@@ -148,10 +168,8 @@ function Home() {
                         <Button
                             icon={faCopy}
                             className={["mr-4"]}
-                            type="success"></Button>
-                        <Button
-                            icon={faArrowRotateRight}
-                            type="danger"></Button>
+                            type="success"
+                            onClick={handleCloneEmployeeBtn}></Button>
                     </div>
                 </div>
             </div>
@@ -159,7 +177,7 @@ function Home() {
                 isOpen={isOpenAddModal}
                 handleClose={handleClickCloseModal}
                 employeeData={employeeDetail}
-                editing={editing}></AddEmployeeModal>
+                type={type}></AddEmployeeModal>
             <div className={cx("row", "mt-16")}>
                 <div className={cx("col", "c-12")}>
                     <Table

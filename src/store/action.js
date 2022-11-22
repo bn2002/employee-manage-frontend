@@ -6,6 +6,7 @@ const {
     SET_FILTER_INPUT,
     SET_PER_PAGE,
     SET_CURRENT_PAGE,
+    SET_SELECTED_ROW,
 } = require("./constants");
 
 const setCurrentPath = (payload) => {
@@ -56,6 +57,13 @@ const setPerPage = (payload) => {
         payload,
     };
 };
+
+const setSelectedRow = (payload) => {
+    return {
+        type: SET_SELECTED_ROW,
+        payload,
+    };
+};
 export {
     setCurrentPath,
     setShowSiderbar,
@@ -64,4 +72,5 @@ export {
     setFilterInput,
     setCurrentPage,
     setPerPage,
+    setSelectedRow,
 };

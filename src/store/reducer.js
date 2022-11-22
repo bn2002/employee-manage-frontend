@@ -5,6 +5,7 @@ import {
     SET_FILTER_INPUT,
     SET_FILTER_POSITION,
     SET_PER_PAGE,
+    SET_SELECTED_ROW,
     SET_SHOW_SIDERBAR,
 } from "./constants";
 
@@ -16,6 +17,7 @@ const initState = {
     filterPosition: "",
     filterDepartment: "",
     filterInput: "",
+    selectedRow: [],
 };
 
 function reducer(state, action) {
@@ -54,6 +56,11 @@ function reducer(state, action) {
             return {
                 ...state,
                 currentPage: action.payload,
+            };
+        case SET_SELECTED_ROW:
+            return {
+                ...state,
+                selectedRow: action.payload,
             };
         default:
             throw new Error("Action invalid");

@@ -3,6 +3,8 @@ import { useTable, useRowSelect, usePagination } from "react-table";
 import classNames from "classnames/bind";
 import styles from "./Table.module.scss";
 import { Pagination } from "../Pagination";
+import { useData } from "~/hooks";
+import { setSelectedRow } from "~/store/action";
 const cx = classNames.bind(styles);
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
@@ -70,6 +72,7 @@ function Table({
         }
     );
 
+    const [, dispatch] = useData();
     const {
         getTableProps,
         getTableBodyProps,
@@ -79,6 +82,13 @@ function Table({
         selectedFlatRows,
         state: { selectedRowIds },
     } = tables;
+
+    useEffect(() => {
+        let listId = selectedFlatRows.map(
+            (selectedItem) => selectedItem.original
+        );
+        dispatch(setSelectedRow(listId));
+    }, [selectedFlatRows]);
     return (
         <>
             <div className={cx("table-wrapper")}>

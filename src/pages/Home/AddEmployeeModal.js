@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import { useForm } from "react-hook-form";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
@@ -21,7 +21,7 @@ const listDateField = ["dateOfBirth", "joiningDate", "identityIssuedDate"];
 function AddEmployeeModal({
     isOpen,
     handleClose,
-    editing = false,
+    type = "",
     employeeData = {},
 }) {
     const [positions, setPositions] = useState([]);
@@ -48,11 +48,11 @@ function AddEmployeeModal({
     }, []);
 
     useEffect(() => {
-        if (editing === false) {
+        if (type === "add") {
             getEmployeeCode().then((result) => {
                 setValue("employeeCode", result);
             });
-        } else {
+        } else if (type === "edit" || type === "clone") {
             for (let field in employeeData) {
                 if (listDateField.includes(field)) {
                     setValue(field, convertDateTime(employeeData[field]));
@@ -69,11 +69,12 @@ function AddEmployeeModal({
             return;
         }
     }, [isOpen === false]);
+
     const onSubmit = (data) => {
         let handler;
-        if (editing === true) {
+        if (type === "edit") {
             handler = updateEmployee;
-        } else {
+        } else if (type === "add" || type === "clone") {
             handler = createEmployee;
         }
         handler(data)

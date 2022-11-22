@@ -5,6 +5,7 @@ const SET_FILTER_DEPARTMENT = "set_filter_department";
 const SET_FILTER_INPUT = "set_filter_input";
 const SET_CURRENT_PAGE = "set_current_page";
 const SET_PER_PAGE = "set_per_page";
+const SET_SELECTED_ROW = "set_selected_row";
 export {
     SET_CURRENT_PATH,
     SET_SHOW_SIDERBAR,
@@ -13,4 +14,5 @@ export {
     SET_FILTER_INPUT,
     SET_CURRENT_PAGE,
     SET_PER_PAGE,
+    SET_SELECTED_ROW,
 };
