@@ -1,8 +1,21 @@
-import { SET_CURRENT_PATH, SET_SHOW_SIDERBAR } from "./constants";
+import {
+    SET_CURRENT_PAGE,
+    SET_CURRENT_PATH,
+    SET_FILTER_DEPARTMENT,
+    SET_FILTER_INPUT,
+    SET_FILTER_POSITION,
+    SET_PER_PAGE,
+    SET_SHOW_SIDERBAR,
+} from "./constants";
 
 const initState = {
+    currentPage: 0,
+    perPage: 25,
     currentPath: "/",
     showSiderbar: true,
+    filterPosition: "",
+    filterDepartment: "",
+    filterInput: "",
 };
 
 function reducer(state, action) {
@@ -16,6 +29,31 @@ function reducer(state, action) {
             return {
                 ...state,
                 showSiderbar: action.payload,
+            };
+        case SET_FILTER_DEPARTMENT:
+            return {
+                ...state,
+                filterDepartment: action.payload,
+            };
+        case SET_FILTER_POSITION:
+            return {
+                ...state,
+                filterPosition: action.payload,
+            };
+        case SET_FILTER_INPUT:
+            return {
+                ...state,
+                filterInput: action.payload,
+            };
+        case SET_PER_PAGE:
+            return {
+                ...state,
+                perPage: action.payload,
+            };
+        case SET_CURRENT_PAGE:
+            return {
+                ...state,
+                currentPage: action.payload,
             };
         default:
             throw new Error("Action invalid");

@@ -1,21 +1,26 @@
+import { useCallback, useEffect, useState } from "react";
+import classNames from "classnames/bind";
 import { useForm } from "react-hook-form";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
-import classNames from "classnames/bind";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Modal } from "~/components/Modal";
 import stylesModal from "~/components/Modal/Modal.module.scss";
 import stylesInput from "~/components/Input/Input.module.scss";
-import { useEffect, useState } from "react";
 import { getPositions } from "~/services/position";
 import { getDepartments } from "~/services/department";
+import { createEmployee, getEmployeeCode } from "~/services/employee";
 const cx = classNames.bind(stylesModal);
 const cxInput = classNames.bind(stylesInput);
 function AddEmployeeModal({ isOpen, handleClose }) {
     const [positions, setPositions] = useState([]);
     const [departments, setDepartments] = useState([]);
+    const [employeeCode, setEmployeeCode] = useState("");
     const {
         register,
         handleSubmit,
-        watch,
+        setValue,
+        setError,
         formState: { errors },
     } = useForm();
 
@@ -31,7 +36,35 @@ function AddEmployeeModal({ isOpen, handleClose }) {
         });
     }, []);
 
-    const onSubmit = (data) => console.log(data);
+    useEffect(() => {
+        if (isOpen === true) {
+            getEmployeeCode().then((result) => {
+                setEmployeeCode(result);
+                setValue("employeeCode", result);
+            });
+        }
+    }, [isOpen]);
+
+    const onSubmit = useCallback((data) => {
+        createEmployee(data)
+            .then((result) => {
+                toast.success(result.data.message);
+            })
+            .catch((error) => {
+                let errResponse = error?.response?.data;
+                let listInputErrors = errResponse?.data;
+                if (listInputErrors.length > 0) {
+                    listInputErrors.map((mess) => {
+                        setError(mess.field, {
+                            type: "manual",
+                            message: mess.message,
+                        });
+                    });
+                }
+                toast.error(errResponse?.message);
+            });
+    }, []);
+
     return (
         <Modal
             openModal={isOpen}
@@ -58,6 +91,11 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                         className={cxInput("input__control")}
                                         {...register("employeeCode")}
                                         placeholder="Mã nhân viên"></input>
+                                    {errors.employeeCode && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.employeeCode.message}
+                                        </p>
+                                    )}
                                 </span>
                             </div>
                             <div className="col c-6">
@@ -67,8 +105,13 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                     <input
                                         type="text"
                                         className={cxInput("input__control")}
-                                        {...register("employeName")}
+                                        {...register("employeeName")}
                                         placeholder="Tên nhân viên"></input>
+                                    {errors.employeeName && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.employeeName.message}
+                                        </p>
+                                    )}
                                 </span>
                             </div>
                         </div>
@@ -83,6 +126,11 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                         className={cxInput("input__control")}
                                         {...register("dateOfBirth")}
                                         placeholder="Ngày sinh"></input>
+                                    {errors.dateOfBirth && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.dateOfBirth.message}
+                                        </p>
+                                    )}
                                 </span>
                             </div>
                             <div className="col c-6">
@@ -96,6 +144,11 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                         <option value="1">Nam</option>
                                         <option value="2">Khác</option>
                                     </select>
+                                    {errors.gender && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.gender.message}
+                                        </p>
+                                    )}
                                 </span>
                             </div>
                         </div>
@@ -110,6 +163,11 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                         className={cxInput("input__control")}
                                         {...register("identityNumber")}
                                         placeholder="Số CMTND/ Căn cước"></input>
+                                    {errors.identityNumber && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.identityNumber.message}
+                                        </p>
+                                    )}
                                 </span>
                             </div>
                             <div className="col c-6">
@@ -121,6 +179,11 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                         className={cxInput("input__control")}
                                         {...register("identityIssuedDate")}
                                         placeholder="Ngày cấp"></input>
+                                    {errors.identityIssuedDate && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.identityIssuedDate.message}
+                                        </p>
+                                    )}
                                 </span>
                             </div>
                         </div>
@@ -135,6 +198,11 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                         className={cxInput("input__control")}
                                         {...register("identityIssuedPlace")}
                                         placeholder="Nơi cấp"></input>
+                                    {errors.identityIssuedPlace && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.identityIssuedPlace.message}
+                                        </p>
+                                    )}
                                 </span>
                             </div>
                         </div>
@@ -148,6 +216,11 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                         className={cxInput("input__control")}
                                         {...register("email")}
                                         placeholder="Địa chỉ email"></input>
+                                    {errors.email && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.email.message}
+                                        </p>
+                                    )}
                                 </span>
                             </div>
                             <div className="col c-6">
@@ -159,6 +232,11 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                         className={cxInput("input__control")}
                                         {...register("phoneNumber")}
                                         placeholder="Số điện thoại"></input>
+                                    {errors.phoneNumber && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.phoneNumber.message}
+                                        </p>
+                                    )}
                                 </span>
                             </div>
                         </div>
@@ -183,6 +261,11 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                         </option>
                                     ))}
                                 </select>
+                                {errors.position && (
+                                    <p className={cx("color-red", "mt-4")}>
+                                        {errors.position.message}
+                                    </p>
+                                )}
                             </div>
                             <div className="col c-6">
                                 <span className={cxInput("input__label")}>
@@ -200,6 +283,11 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                         </option>
                                     ))}
                                 </select>
+                                {errors.department && (
+                                    <p className={cx("color-red", "mt-4")}>
+                                        {errors.department.message}
+                                    </p>
+                                )}
                             </div>
                         </div>
 
@@ -214,17 +302,27 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                     className={cxInput("input__control")}
                                     {...register("taxCode")}
                                     placeholder="Mã số thuế cá nhân"></input>
+                                {errors.taxCode && (
+                                    <p className={cx("color-red", "mt-4")}>
+                                        {errors.taxCode.message}
+                                    </p>
+                                )}
                             </div>
                             <div className="col c-6">
                                 <span className={cxInput("input__label")}>
                                     Lương cơ bản (
                                     <span className="color-red">*</span>)
+                                    <input
+                                        type="text"
+                                        className={cxInput("input__control")}
+                                        {...register("salary")}
+                                        placeholder="Lương cơ bản"></input>
+                                    {errors.salary && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.salary.message}
+                                        </p>
+                                    )}
                                 </span>
-                                <input
-                                    type="text"
-                                    className={cxInput("input__control")}
-                                    {...register("salary")}
-                                    placeholder="Lương cơ bản"></input>
                             </div>
                         </div>
 
@@ -239,19 +337,29 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                                     className={cxInput("input__control")}
                                     {...register("joiningDate")}
                                     placeholder="Ngày gia nhập công ty"></input>
+                                {errors.joiningDate && (
+                                    <p className={cx("color-red", "mt-4")}>
+                                        {errors.joiningDate.message}
+                                    </p>
+                                )}
                             </div>
                             <div className="col c-6">
                                 <span className={cxInput("input__label")}>
                                     Tình trạng công việc (
                                     <span className="color-red">*</span>)
+                                    <select
+                                        className={cxInput("input__control")}
+                                        {...register("workStatus")}>
+                                        <option value="1">Đang làm việc</option>
+                                        <option value="2">Thực tập</option>
+                                        <option value="0">Nghỉ việc</option>
+                                    </select>
+                                    {errors.workStatus && (
+                                        <p className={cx("color-red", "mt-4")}>
+                                            {errors.workStatus.message}
+                                        </p>
+                                    )}
                                 </span>
-                                <select
-                                    className={cxInput("input__control")}
-                                    {...register("workStatus")}>
-                                    <option value="1">Đang làm việc</option>
-                                    <option value="2">Thực tập</option>
-                                    <option value="0">Nghỉ việc</option>
-                                </select>
                             </div>
                         </div>
                     </form>
