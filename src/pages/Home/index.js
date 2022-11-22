@@ -11,7 +11,11 @@ import {
 import { MySelectBox } from "~/components/MySelectBox";
 import styles from "./Home.module.scss";
 import { Table } from "~/components/Table";
-import { getAllEmployee, getHeaderTable } from "~/services/employee";
+import {
+    getAllEmployee,
+    getDetailEmployee,
+    getHeaderTable,
+} from "~/services/employee";
 import AddEmployeeModal from "./AddEmployeeModal";
 import { getDepartments } from "~/services/department";
 import { getPositions } from "~/services/position";
@@ -31,7 +35,8 @@ function Home() {
     const [departments, setDepartments] = useState([]);
     const [positions, setPositions] = useState([]);
     const [state, dispatch] = useData();
-
+    const [employeeDetail, setEmployeeDetail] = useState({});
+    const [editing, setEditing] = useState(false);
     const {
         filterPosition,
         filterDepartment,
@@ -40,11 +45,23 @@ function Home() {
         currentPage,
     } = state;
     const handleClickOpenModal = () => {
+        setEditing(false);
         setOpenAddModal(true);
     };
 
     const handleClickCloseModal = () => {
+        setEditing(false);
         setOpenAddModal(false);
+    };
+
+    const handleEditEmployee = (employeeId) => {
+        getDetailEmployee(employeeId)
+            .then((result) => {
+                setEditing(true);
+                setEmployeeDetail(result.data);
+                setOpenAddModal(true);
+            })
+            .catch(console.log);
     };
 
     useEffect(() => {
@@ -140,7 +157,9 @@ function Home() {
             </div>
             <AddEmployeeModal
                 isOpen={isOpenAddModal}
-                handleClose={handleClickCloseModal}></AddEmployeeModal>
+                handleClose={handleClickCloseModal}
+                employeeData={employeeDetail}
+                editing={editing}></AddEmployeeModal>
             <div className={cx("row", "mt-16")}>
                 <div className={cx("col", "c-12")}>
                     <Table
@@ -148,7 +167,8 @@ function Home() {
                         columns={employeeHeaderTable}
                         perPage={perPage}
                         totalPages={employees?.totalPages ?? 0}
-                        currentPage={currentPage}></Table>
+                        currentPage={currentPage}
+                        handleDoubleClick={handleEditEmployee}></Table>
                 </div>
             </div>
         </>

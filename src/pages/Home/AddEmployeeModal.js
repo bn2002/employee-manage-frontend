@@ -9,17 +9,28 @@ import stylesModal from "~/components/Modal/Modal.module.scss";
 import stylesInput from "~/components/Input/Input.module.scss";
 import { getPositions } from "~/services/position";
 import { getDepartments } from "~/services/department";
-import { createEmployee, getEmployeeCode } from "~/services/employee";
+import {
+    createEmployee,
+    getEmployeeCode,
+    updateEmployee,
+} from "~/services/employee";
+import { convertDateTime } from "~/libs/helper";
 const cx = classNames.bind(stylesModal);
 const cxInput = classNames.bind(stylesInput);
-function AddEmployeeModal({ isOpen, handleClose }) {
+const listDateField = ["dateOfBirth", "joiningDate", "identityIssuedDate"];
+function AddEmployeeModal({
+    isOpen,
+    handleClose,
+    editing = false,
+    employeeData = {},
+}) {
     const [positions, setPositions] = useState([]);
     const [departments, setDepartments] = useState([]);
-    const [employeeCode, setEmployeeCode] = useState("");
     const {
         register,
         handleSubmit,
         setValue,
+        reset,
         setError,
         formState: { errors },
     } = useForm();
@@ -37,16 +48,35 @@ function AddEmployeeModal({ isOpen, handleClose }) {
     }, []);
 
     useEffect(() => {
-        if (isOpen === true) {
+        if (editing === false) {
             getEmployeeCode().then((result) => {
-                setEmployeeCode(result);
                 setValue("employeeCode", result);
             });
+        } else {
+            for (let field in employeeData) {
+                if (listDateField.includes(field)) {
+                    setValue(field, convertDateTime(employeeData[field]));
+                } else {
+                    setValue(field, employeeData[field]);
+                }
+            }
         }
-    }, [isOpen]);
+    }, [isOpen === true]);
 
-    const onSubmit = useCallback((data) => {
-        createEmployee(data)
+    useEffect(() => {
+        if (isOpen !== true) {
+            reset();
+            return;
+        }
+    }, [isOpen === false]);
+    const onSubmit = (data) => {
+        let handler;
+        if (editing === true) {
+            handler = updateEmployee;
+        } else {
+            handler = createEmployee;
+        }
+        handler(data)
             .then((result) => {
                 toast.success(result.data.message);
             })
@@ -63,7 +93,7 @@ function AddEmployeeModal({ isOpen, handleClose }) {
                 }
                 toast.error(errResponse?.message);
             });
-    }, []);
+    };
 
     return (
         <Modal

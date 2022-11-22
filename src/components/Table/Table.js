@@ -26,7 +26,14 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
     );
 });
 
-function Table({ columns, data, currentPage, perPage, totalPages }) {
+function Table({
+    columns,
+    data,
+    currentPage,
+    perPage,
+    totalPages,
+    handleDoubleClick,
+}) {
     const tables = useTable(
         {
             columns,
@@ -95,7 +102,10 @@ function Table({ columns, data, currentPage, perPage, totalPages }) {
                                     {...row.getRowProps()}
                                     className={cx({
                                         "row--active": row.isSelected,
-                                    })}>
+                                    })}
+                                    onDoubleClick={() => {
+                                        handleDoubleClick(row?.original?.id);
+                                    }}>
                                     {row.cells.map((cell) => {
                                         return (
                                             <td {...cell.getCellProps()}>

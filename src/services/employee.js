@@ -17,6 +17,15 @@ const getAllEmployee = async ({
     }
 };
 
+const getDetailEmployee = async (id) => {
+    try {
+        let result = await axios.get(`employee/${id}`);
+        return result.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 const getHeaderTable = () => {
     return [
         {
@@ -74,4 +83,15 @@ const getEmployeeCode = async (data) => {
         console.log(error);
     }
 };
-export { getAllEmployee, getHeaderTable, createEmployee, getEmployeeCode };
+
+const updateEmployee = async (data) => {
+    return await axios.put(`employee/${data.id}`, data);
+};
+export {
+    getAllEmployee,
+    getHeaderTable,
+    createEmployee,
+    getEmployeeCode,
+    getDetailEmployee,
+    updateEmployee,
+};
